@@ -3,6 +3,8 @@ import { SlashCreator, GatewayServer } from 'slash-create';
 import { Client } from 'eris';
 import path from 'path';
 import CatLoggr from 'cat-loggr/ts';
+import { registerComponents } from './util/game';
+import util from 'node:util';
 
 let dotenvPath = path.join(process.cwd(), '.env');
 if (path.parse(process.cwd()).name === 'dist') dotenvPath = path.join(process.cwd(), '..', '.env');
@@ -10,15 +12,15 @@ if (path.parse(process.cwd()).name === 'dist') dotenvPath = path.join(process.cw
 dotenv.config({ path: dotenvPath });
 
 const logger = new CatLoggr().setLevel(process.env.COMMANDS_DEBUG === 'true' ? 'debug' : 'info');
+const client = new Client(process.env.DISCORD_BOT_TOKEN, {
+  intents: ['guilds', 'guildMessages']
+});
 const creator = new SlashCreator({
+  client,
   applicationID: process.env.DISCORD_APP_ID,
   publicKey: process.env.DISCORD_PUBLIC_KEY,
   token: process.env.DISCORD_BOT_TOKEN,
   serverPort: 8020
-});
-
-const client = new Client(process.env.DISCORD_BOT_TOKEN, {
-  intents: ['guilds', 'guildMessages']
 });
 
 creator.on('debug', (message) => logger.log(message));
@@ -44,4 +46,9 @@ creator
   // .syncCommands()
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
+client.connect();
+
+registerComponents(client, creator);
+
+// creator.startServer();
 client.connect();
