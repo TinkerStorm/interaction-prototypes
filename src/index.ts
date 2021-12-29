@@ -4,7 +4,6 @@ import { Client } from 'eris';
 import path from 'path';
 import CatLoggr from 'cat-loggr/ts';
 import { registerComponents } from './util/game';
-import util from 'node:util';
 
 let dotenvPath = path.join(process.cwd(), '.env');
 if (path.parse(process.cwd()).name === 'dist') dotenvPath = path.join(process.cwd(), '..', '.env');

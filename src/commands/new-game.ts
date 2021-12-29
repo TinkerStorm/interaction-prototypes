@@ -8,7 +8,7 @@ import {
 } from 'slash-create';
 import { IGame, randomName, buildPost } from '../util/game';
 
-export default class HelloCommand extends SlashCommand<Client> {
+export default class NewGameCommand extends SlashCommand<Client> {
   get initialRoster() {
     return Array.from({ length: 3 }, () => ({
       name: '\u200b',
@@ -26,12 +26,19 @@ export default class HelloCommand extends SlashCommand<Client> {
   }
 
   async run(ctx: CommandContext) {
+    return "This command has been forcefully disabled.\nPlease use the game roster instead.";
+  }
+
+  async _run(ctx: CommandContext) {
     if (!ctx.guildID) {
       return 'This command can only be used in a server.';
     }
 
     const game: IGame = {
       id: null,
+      postID: null,
+      requests: [],
+      isPrivate: false,
       players: [ctx.member],
       color: Math.floor(Math.random() * 0xffffff),
       title: randomName(),
