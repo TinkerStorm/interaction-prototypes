@@ -49,7 +49,7 @@ export default class GameConfig extends SlashCommand<ErisClient> {
           custom_id: "toggle-private",
           style: ButtonStyle.SECONDARY,
           emoji: {
-            name: game.isPrivate ? "🔒" : "🔓"
+            name: game.isPrivate ? "🔓" : "🔒"
           }
         }]
       }],

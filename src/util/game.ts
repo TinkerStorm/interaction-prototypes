@@ -421,6 +421,16 @@ export function registerComponents(client: ErisClient, creator: SlashCreator) {
           }]
         }]
       });
+
+      await client.createMessage(game.id, {
+        embeds: [{
+          title: `${ctx.member.nick || ctx.user.username} has joined the game.`,
+          thumbnail: {
+            url: ctx.member.avatarURL
+          },
+          color: game.color
+        }]
+      });
     }
   });
 
@@ -481,11 +491,7 @@ export function registerComponents(client: ErisClient, creator: SlashCreator) {
         image: {
           url: member.avatarURL
         },
-        color: game.color,
-        footer: {
-          text: `${ctx.user.username}#${ctx.user.discriminator}`,
-          icon_url: ctx.user.avatarURL
-        }
+        color: game.color
       }]
     });
     await ctx.delete(ctx.message.id);
@@ -559,6 +565,16 @@ export function registerComponents(client: ErisClient, creator: SlashCreator) {
     reply('You have left the game.');
 
     await client.deleteChannelPermission(game.id, ctx.member.id, "Leaving game lobby");
+
+    await client.createMessage(game.id, {
+      embeds: [{
+        title: `${ctx.member.nick || ctx.user.username} has left the game.`,
+        thumbnail: {
+          url: ctx.member.avatarURL
+        },
+        color: game.color
+      }]
+    });
 
     if (game.players.length <= 1) {
       await client.editMessage(ctx.channelID, gamePromptID, {
