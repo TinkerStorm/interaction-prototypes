@@ -2,7 +2,7 @@
 > Generated from `slash-create-template` using [`slash-up`](https://github.com/Snazzah/slash-up).
 A collection of interaction prototypes made purely for testing, with the intention of using them for services in the future.
 
-## [Game lobby handler](./src/commands/game.ts)
+## [Game lobby handler](./src/commands/game.ts) ([Video](./assets/lobby-interaction-demo.mp4))
 
 ![Lobby interaction demo](./assets/lobby-interaction-demo.gif)
 
