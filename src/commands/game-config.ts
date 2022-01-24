@@ -30,7 +30,7 @@ export default class GameConfig extends SlashCommand<ErisClient> {
 
     ctx.registerComponent("toggle-private", ctx => {
       game.isPrivate = !game.isPrivate;
-      ctx.edit(ctx.message.id, this.buildConfigView(ctx, game));
+      ctx.editParent(this.buildConfigView(ctx, game));
 
       ctx.sendFollowUp("Game is now " + (game.isPrivate ? "Private" : "Public"), { ephemeral: true });
 
