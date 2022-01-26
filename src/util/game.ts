@@ -307,6 +307,8 @@ export function registerComponents(client: ErisClient, creator: SlashCreator) {
 
     if (gamePromptID) {
       await client.editMessage(channelID, gamePromptID, {
+        content: "",
+        embeds: [],
         components: [{
           type: ComponentType.ACTION_ROW,
           components: [{
