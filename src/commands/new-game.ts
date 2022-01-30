@@ -1,14 +1,9 @@
 import { Client } from 'eris';
-import {
-  SlashCommand,
-  SlashCreator,
-  CommandContext,
-  ApplicationCommandType,
-  Permissions
-} from 'slash-create';
+import { SlashCommand, SlashCreator, CommandContext, ApplicationCommandType, Permissions } from 'slash-create';
 import { IGame, randomName, buildPost } from '../util/game';
 
 export default class NewGameCommand extends SlashCommand<Client> {
+  
   get initialRoster() {
     return Array.from({ length: 3 }, () => ({
       name: '\u200b',
@@ -42,6 +37,7 @@ export default class NewGameCommand extends SlashCommand<Client> {
       players: [ctx.member],
       color: Math.floor(Math.random() * 0xffffff),
       title: randomName(),
+      log: [],
       // host: ctx.member, -- assumed from index 0
       get host() {
         return this.players[0];

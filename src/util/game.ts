@@ -1,5 +1,5 @@
-import { Client as ErisClient, Message, TextChannel } from 'eris';
-import { ButtonStyle, ComponentButton, ComponentType, Member, MessageEmbedOptions, MessageOptions, Permissions, SlashCreator } from 'slash-create';
+import { BaseData, CategoryChannel, Client, Client as ErisClient, CommandInteraction, ComponentInteraction, Message, PingInteraction, TextChannel } from 'eris';
+import { AutocompleteContext, ButtonStyle, ComponentButton, ComponentType, InteractionType, Member, MessageEmbedOptions, MessageOptions, Permissions, SlashCreator } from 'slash-create';
 
 export interface IGame {
   title: string;
@@ -10,6 +10,7 @@ export interface IGame {
   postID: string;
   color: number;
   isPrivate: boolean;
+  log: Array<{ type: string, context: object }>
 }
 
 const names = [
@@ -58,7 +59,7 @@ export function createGame(host: Member): IGame {
     if (game.host.id === host.id) {
       for (const player of game.players) {
         if (player.id === host.id) {
-          throw new Error('Host is already in a game.');
+          throw new Error(`You are already in a game (<#${game.id}>).`);
         }
       }
     }
@@ -72,6 +73,7 @@ export function createGame(host: Member): IGame {
     color: Math.floor(Math.random() * 0xffffff),
     requests: [],
     players: [host],
+    log: [],
     get host() {
       return this.players[0];
     }
@@ -145,8 +147,76 @@ export function buildPost(game: IGame): MessageOptions {
 }
 
 export function registerComponents(client: ErisClient, creator: SlashCreator) {
+  //creator.on('commandRun', async (_, promise, ctx) => {
+  //  await promise;
+  //  if (games.has(ctx.channelID)) {
+  //    const game = games.get(ctx.channelID);
+  //    game.log.push({
+  //      type: 'interaction',
+  //      context: ctx
+  //    });
+  //  }
+  //});
+
+  client.on('interactionCreate', (interaction) => {
+    if (interaction instanceof PingInteraction || interaction instanceof AutocompleteContext) {
+      return;
+    }
+
+    interaction = interaction as CommandInteraction | ComponentInteraction;
+
+    if (games.has(interaction.channel.id)) {
+      const game = games.get(interaction.channel.id);
+      game.log.push({
+        type: 'interaction:' + InteractionType[interaction.type],
+        context: { ...interaction.toJSON() }
+      });
+    }
+  })
+
+  creator.on('componentInteraction', (ctx) => {
+    if (games.has(ctx.channelID)) {
+      const game = games.get(ctx.channelID);
+      game.log.push({
+        type: 'interaction',
+        context: ctx
+      });
+    }
+  });
+
+  //client.on('messageDelete', msg => {
+  //  creator.emit('debug', `Message deleted: ${msg.id}`);
+  //  if (games.has(msg.channel.id)) {
+  //    const game = games.get(msg.channel.id);
+  //    game.log.push({
+  //      type: 'messageDelete',
+  //      context: new Message<TextChannel>(msg as BaseData, client).toJSON()
+  //    });
+  //  }
+  //});
+
+  //client.on('messageUpdate', (newMsg) => {
+  //  if (games.has(newMsg.channel.id)) {
+  //    const game = games.get(newMsg.channel.id);
+  //    game.log.push({
+  //      type: 'messageUpdate',
+  //      context: newMsg
+  //    });
+  //  }
+  //})
+
   client.on('messageCreate', async (msg: Message<TextChannel>) => {
+
+    // add the message to the game log
+    if (games.has(msg.channel.id)) {
+      const game = games.get(msg.channel.id);
+      game.log.push({ type: "messageCreate", context: msg });
+      creator.emit('debug', `Pushed messageCreate for ${msg.id} to game ${game.id}`);
+    }
+
     if (msg.content === '!game-prompt') {
+      client.deleteMessage(msg.channel.id, msg.id);
+
       if (lobbyChannels.has(msg.channel.guild.id)) {
         return;
       }
@@ -195,9 +265,12 @@ export function registerComponents(client: ErisClient, creator: SlashCreator) {
       return;
     }
 
+    const parentPermissions = (client.getChannel('924737174933495900') as CategoryChannel).permissionOverwrites.values()
+
     const channel = await client.createChannel(ctx.guildID, game.title, 0, {
       parentID: '924737174933495900',
       permissionOverwrites: [
+        ...parentPermissions,
         { type: 1, id: client.user.id, allow: 292058164304, deny: 0 },
         { type: 1, id: ctx.member.id, allow: Permissions.FLAGS.VIEW_CHANNEL, deny: 0 },
         { type: 0, id: ctx.guildID, allow: 0, deny: Permissions.FLAGS.VIEW_CHANNEL }
@@ -290,7 +363,7 @@ export function registerComponents(client: ErisClient, creator: SlashCreator) {
 
   creator.registerGlobalComponent('delete', async ctx => {
     const game = games.get(ctx.channelID);
-    const {channelID, gamePromptID} = lobbyChannels.get(ctx.guildID);
+    const { channelID, gamePromptID } = lobbyChannels.get(ctx.guildID);
 
     if (!game) {
       ctx.send('You are not in a game', { ephemeral: true });
@@ -304,6 +377,34 @@ export function registerComponents(client: ErisClient, creator: SlashCreator) {
 
     await client.deleteMessage(channelID, game.postID);
     await client.deleteChannel(ctx.channelID);
+
+    const replacer = (key: any, value: any) => {
+      console.log(key, value);
+
+      if (
+        value instanceof Client ||
+        value instanceof SlashCreator ||
+        ['_ctx', 'token', 'interactionToken', 'publicKey'].includes(key) ||
+        key.startsWith('_')
+      ) {
+        return undefined;
+      }
+
+      return value;
+    };
+    const serializedLog = JSON.stringify(game.log, replacer, 2);
+
+    client.createMessage(channelID, {
+      embeds: [{
+        title: `Message log upload for ${game.title} (${game.id})`,
+        color: game.color
+      }]
+    }, {
+      file: Buffer.from(serializedLog),
+      name: `${game.title}.json`
+    });
+
+    games.delete(ctx.channelID);
 
     if (gamePromptID) {
       await client.editMessage(channelID, gamePromptID, {
@@ -329,7 +430,7 @@ export function registerComponents(client: ErisClient, creator: SlashCreator) {
   });
 
   creator.registerGlobalComponent('join', async (ctx) => {
-    const {channelID, gamePromptID} = lobbyChannels.get(ctx.guildID);
+    const { channelID, gamePromptID } = lobbyChannels.get(ctx.guildID);
 
     // ensure interaction is from the lobby channel
     if (ctx.channelID !== channelID) {
@@ -370,7 +471,7 @@ export function registerComponents(client: ErisClient, creator: SlashCreator) {
     //}
     if (game.isPrivate) {
       game.requests.push(ctx.member);
-      
+
       client.createMessage(game.id, {
         content: `<@${game.host.id}>`,
         embeds: [{
@@ -438,7 +539,7 @@ export function registerComponents(client: ErisClient, creator: SlashCreator) {
 
   creator.registerGlobalComponent('accept', async ctx => {
     const game = games.get(ctx.channelID);
-    const {channelID, gamePromptID} = lobbyChannels.get(ctx.guildID);
+    const { channelID, gamePromptID } = lobbyChannels.get(ctx.guildID);
 
     if (!game) {
       ctx.send('You are not in a game', { ephemeral: true });
