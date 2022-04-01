@@ -3,7 +3,7 @@ import { SlashCreator, GatewayServer } from 'slash-create';
 import { Client } from 'eris';
 import path from 'path';
 import CatLoggr from 'cat-loggr/ts';
-import { registerComponents } from './util/game';
+import { registerComponents as registerLobbyComponents } from './util/game';
 
 let dotenvPath = path.join(process.cwd(), '.env');
 if (path.parse(process.cwd()).name === 'dist') dotenvPath = path.join(process.cwd(), '..', '.env');
@@ -47,7 +47,7 @@ creator
 
 client.connect();
 
-registerComponents(client, creator);
+registerLobbyComponents(client, creator);
 
 // creator.startServer();
 client.connect();

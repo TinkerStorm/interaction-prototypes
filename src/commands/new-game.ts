@@ -1,9 +1,15 @@
 import { Client } from 'eris';
-import { SlashCommand, SlashCreator, CommandContext, ApplicationCommandType, Permissions } from 'slash-create';
+import {
+  SlashCommand,
+  SlashCreator,
+  CommandContext,
+  ApplicationCommandType,
+  Permissions,
+  MessageOptions
+} from 'slash-create';
 import { IGame, randomName, buildPost } from '../util/game';
 
 export default class NewGameCommand extends SlashCommand<Client> {
-  
   get initialRoster() {
     return Array.from({ length: 3 }, () => ({
       name: '\u200b',
@@ -21,7 +27,7 @@ export default class NewGameCommand extends SlashCommand<Client> {
   }
 
   async run(ctx: CommandContext) {
-    return "This command has been forcefully disabled.\nPlease use the game roster instead.";
+    return 'This command has been forcefully disabled.\nPlease use the game roster instead.';
   }
 
   async _run(ctx: CommandContext) {
@@ -46,17 +52,19 @@ export default class NewGameCommand extends SlashCommand<Client> {
 
     const channel = await this.client.createChannel(ctx.guildID, game.title, 0, {
       parentID: '924737174933495900',
-      permissionOverwrites: [{
-        type: 0,
-        id: ctx.member.id,
-        allow: Permissions.FLAGS.VIEW_CHANNEL | Permissions.FLAGS.SEND_MESSAGES,
-        deny: 0
-      }]
+      permissionOverwrites: [
+        {
+          type: 0,
+          id: ctx.member.id,
+          allow: Permissions.FLAGS.VIEW_CHANNEL | Permissions.FLAGS.SEND_MESSAGES,
+          deny: 0
+        }
+      ]
     });
 
     game.id = channel.id;
 
-    await ctx.send(buildPost(game));
+    await ctx.send(buildPost<MessageOptions>(game));
 
     await ctx.fetch();
 
