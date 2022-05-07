@@ -1,7 +1,7 @@
 import { Client } from 'eris';
 import { CommandContext, ComponentType, SlashCommand, SlashCreator } from 'slash-create';
 import { wait } from '../util/common';
-import { determineResult } from '../util/ballot';
+import { determineResult } from '../functions/ballot';
 import { games } from '../util/game';
 
 export default class VoteMockupCommand extends SlashCommand<Client> {

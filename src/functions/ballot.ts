@@ -4,7 +4,7 @@ type Ballot = Map<string, string>;
 type BallotCounts = Collection<string, number>;
 type BallotOutcome = null | string | string[];
 
-type BallotResult = [BallotOutcome, BallotCounts];
+type BallotResult = [outcome: BallotOutcome, counts: BallotCounts];
 
 // a vote can be null, a string or an array of strings
 // 1) null: inconclusive
