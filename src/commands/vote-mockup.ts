@@ -46,23 +46,23 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
 
     const ballot = new Map<string, string>();
 
-    ctx.registerComponent('vote', async (buttonCtx) => {
-      if (game.players.findIndex((p) => p.id === buttonCtx.user.id) === -1) {
-        buttonCtx.send('You are not in this game.', { ephemeral: true });
+    ctx.registerComponent('vote', async (selectCtx) => {
+      if (game.players.findIndex((p) => p.id === selectCtx.user.id) === -1) {
+        selectCtx.send('You are not in this game.', { ephemeral: true });
       }
 
-      const currentVote = ballot.get(buttonCtx.user.id);
-      const newVote = buttonCtx.values[0];
+      const currentVote = ballot.get(selectCtx.user.id);
+      const newVote = selectCtx.values[0];
 
       if (currentVote === newVote) {
-        await buttonCtx.send('Unchanged.', { ephemeral: true });
+        await selectCtx.send('Unchanged.', { ephemeral: true });
         return;
       }
 
-      ballot.set(buttonCtx.user.id, newVote);
-      await buttonCtx.send(`You have voted for <@${newVote}>.`, { ephemeral: true });
+      ballot.set(selectCtx.user.id, newVote);
+      await selectCtx.send(`You have voted for <@${newVote}>.`, { ephemeral: true });
 
-      await buttonCtx.editParent({
+      await selectCtx.editParent({
         content: `Vote mockup (${ballot.size} / ${game.players.length})`
       });
     });
