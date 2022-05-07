@@ -7,7 +7,8 @@ import {
   Permissions,
   MessageOptions
 } from 'slash-create';
-import { IGame, randomName, buildPost } from '../util/game';
+import { IGame, buildPost } from '../util/game';
+import { pickPhonetic } from '../util/fakerExtended';
 
 export default class NewGameCommand extends SlashCommand<Client> {
   get initialRoster() {
@@ -42,7 +43,7 @@ export default class NewGameCommand extends SlashCommand<Client> {
       isPrivate: false,
       players: [ctx.member],
       color: Math.floor(Math.random() * 0xffffff),
-      title: randomName(),
+      title: pickPhonetic(),
       log: [],
       // host: ctx.member, -- assumed from index 0
       get host() {
