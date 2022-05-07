@@ -8,16 +8,17 @@
     "sync": "slash-up sync",
     "sync:dev": "slash-up sync -e development",
     "start": "cd dist && node index.js",
-    "build": "npx rimraf ./dist | npx tsc",
-    "lint": "npx eslint --ext .ts ./src",
-    "lint:fix": "npx eslint --ext .ts ./src --fix"
+    "build": "npx rimraf ./dist | tsc",
+    "lint": "eslint --ext .ts ./src",
+    "lint:fix": "eslint --ext .ts ./src --fix"
   },
   "dependencies": {
+    "@faker-js/faker": "^6.3.1",
     "cat-loggr": "^1.2.2",
     "dotenv": "^16.0.0",
     "eris": "^0.16.1",
     "fastify": "^3.27.4",
-    "slash-create": "^5.4.1"
+    "slash-create": "^5.5.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.11",
@@ -30,6 +31,6 @@
     "prettier": "^2.2.1",
     "slash-up": "^1.0.3",
     "ts-node": "^10.7.0",
-    "typescript": "^4.2.3"
+    "typescript": "^4.8.0-dev.20220507"
   }
 }
