@@ -4,7 +4,7 @@ A collection of interaction prototypes made purely for testing, with the intenti
 
 ## [Game lobby handler](./src/util/game.ts) ([Video](./assets/lobby-interaction-demo.mp4))
 
-> Latest gif demo was been removed due to being twice the size of the video itself after conversion.
+![Demo](./assets/lobby-interaction-demo.gif)
 
 - Lobby names use the NATO phonetic alphabet.
 - `#initialRoster` will clone itself before being used for rendering the list of players. Since it uses 3 inline fields to render the list, it will determine where each player goes - for mobile compatibility, it will render the numbers vertically.
