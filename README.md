@@ -11,3 +11,7 @@ A collection of interaction prototypes made purely for testing, with the intenti
   > Originally it was intended to use `index % 3` but it now uses `index / 3` to ensure numbers are grouped together.
 - It will not allow players to join the lobby if it is full, and it will not allow the host to leave the lobby.
 - Components will enable themselves once their condition has been met.
+
+## License
+
+This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for more information.
