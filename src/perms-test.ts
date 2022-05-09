@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { CategoryChannel, Client } from "eris";
+import { CategoryChannel, Client } from 'eris';
 import { Permissions } from 'slash-create';
 import path from 'path';
 
@@ -34,20 +34,29 @@ client.on('ready', async () => {
     console.log(id, { allow, deny }, clientCategoryPermissions.missing(allow), json);
   });
 
-  //return client.disconnect({ reconnect: false });
+  // return client.disconnect({ reconnect: false });
   const channel = await client.createChannel(guild.id, `${pickPhonetic()}-${pickPhonetic()}`, 0, {
     parentID: category.id,
     permissionOverwrites: [
       ...permissions.map(({ id, type }) => ({ id, type, allow: observerPermissions.bitfield, deny: 0 })),
       { type: 1, id: client.user.id, allow: managerPermissions.bitfield, deny: 0 },
-      { type: 1, id: "133659993768591360", allow: playerPermissions.bitfield, deny: 0 },
+      { type: 1, id: '133659993768591360', allow: playerPermissions.bitfield, deny: 0 },
       { type: 0, id: guild.id, allow: 0, deny: Permissions.FLAGS.VIEW_CHANNEL }
     ]
   });
 
-  await client.editChannelPermission(channel.id, "133659993768591360", Permissions.FLAGS.VIEW_CHANNEL, 0, 1, "Game host test");
+  await client.editChannelPermission(
+    channel.id,
+    '133659993768591360',
+    Permissions.FLAGS.VIEW_CHANNEL,
+    0,
+    1,
+    'Game host test'
+  );
 
-  console.log(`Created channel ${channel.name} (${channel.id}) with overwrites:`, [...channel.permissionOverwrites.values()]);
+  console.log(`Created channel ${channel.name} (${channel.id}) with overwrites:`, [
+    ...channel.permissionOverwrites.values()
+  ]);
 
   client.disconnect({ reconnect: false });
 });

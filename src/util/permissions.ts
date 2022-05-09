@@ -1,6 +1,6 @@
-import { Permissions } from "slash-create";
+import { Permissions } from 'slash-create';
 
-//const allChannelPermissions = new Permissions([
+// const allChannelPermissions = new Permissions([
 //  'CREATE_INSTANT_INVITE',
 //  'MANAGE_CHANNELS',
 //  'ADD_REACTIONS',
@@ -14,24 +14,18 @@ import { Permissions } from "slash-create";
 //  'USE_EXTERNAL_EMOJIS',
 //  // 'CONNECT',
 //  // 'SPEAK'
-//])
+// ])
 
-export const spectatorOverwrite = new Permissions([
-  'VIEW_CHANNEL',
-  'READ_MESSAGE_HISTORY'
-]);
+export const spectatorOverwrite = new Permissions(['VIEW_CHANNEL', 'READ_MESSAGE_HISTORY']);
 
 export const playerPermissions = new Permissions([
   spectatorOverwrite,
   'SEND_MESSAGES',
   'SEND_MESSAGES_IN_THREADS',
-  'USE_EXTERNAL_EMOJIS',
+  'USE_EXTERNAL_EMOJIS'
 ]);
 
-export const observerPermissions = new Permissions([
-  spectatorOverwrite,
-  'MANAGE_THREADS'
-]);
+export const observerPermissions = new Permissions([spectatorOverwrite, 'MANAGE_THREADS']);
 
 export const managerPermissions = new Permissions([
   playerPermissions,

@@ -1,21 +1,23 @@
-import { AdvancedMessageContent, Client as ErisClient } from "eris";
-import { ComponentContext, ComponentType, ButtonStyle } from "slash-create";
-import { keyFilter } from "../util/common";
+import { AdvancedMessageContent, Client as ErisClient } from 'eris';
+import { ComponentContext, ComponentType, ButtonStyle } from 'slash-create';
+import { keyFilter } from '../util/common';
 
-import { games, IGame, lobbyChannels } from "../util/game";
-import { FileAttachment } from "../util/types";
+import { games, IGame, lobbyChannels } from '../util/game';
+import { FileAttachment } from '../util/types';
 
 const createFileEmbed = (game: IGame): AdvancedMessageContent => ({
-  embeds: [{
-    title: `Message log upload for ${game.title} (${game.id})`,
-    color: game.color
-  }]
+  embeds: [
+    {
+      title: `Message log upload for ${game.title} (${game.id})`,
+      color: game.color
+    }
+  ]
 });
 
 const serializeGameLog = (game: IGame): FileAttachment => ({
   name: `${game.title}-${game.id}.json`,
   file: Buffer.from(JSON.stringify(game.log, keyFilter, 2))
-})
+});
 
 export default async (ctx: ComponentContext, client: ErisClient) => {
   const game = games.get(ctx.channelID);
@@ -35,11 +37,11 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
   await client.deleteMessage(channelID, game.postID);
   await client.deleteChannel(ctx.channelID);
 
-  //await client.createMessage(
+  // await client.createMessage(
   //  channelID,
   //  createFileEmbed(game),
   //  serializeGameLog(game)
-  //);
+  // );
 
   if (gamePromptID) {
     await client.editMessage(channelID, gamePromptID, {
@@ -65,4 +67,4 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
   }
 
   games.delete(ctx.channelID);
-}
+};

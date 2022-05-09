@@ -1,5 +1,5 @@
-import { ComponentContext, Permissions, User as SlashUser } from "slash-create";
-import { Client as ErisClient, GuildChannel, User as ErisUser } from "eris";
+import { ComponentContext, Permissions, User as SlashUser } from 'slash-create';
+import { Client as ErisClient, GuildChannel, User as ErisUser } from 'eris';
 
 // replacement interface for Eris.FileOptions
 export interface FileAttachment {
@@ -11,8 +11,10 @@ export type File = FileAttachment;
 
 export type PromisableCallback<Args extends any[], Result> = (...args: Args) => Result | Promise<Result>;
 
-export type ComponentListener<Methods extends MethodDictionary, ReturnType = any> =
-  PromisableCallback<[context: ComponentContext, client: ErisClient, methods: Methods], ReturnType>
+export type ComponentListener<Methods extends MethodDictionary, ReturnType = any> = PromisableCallback<
+  [context: ComponentContext, client: ErisClient, methods: Methods],
+  ReturnType
+>;
 
 export type MethodDictionary = Record<string, (...args: any[]) => any>;
 

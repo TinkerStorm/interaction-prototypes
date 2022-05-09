@@ -1,12 +1,12 @@
-import { SlashCreator } from "slash-create";
+import { SlashCreator } from 'slash-create';
 
-import acceptComponent from "./accept";
-import declineComponent from "./decline";
-import deleteComponent from "./delete";
-import joinComponent from "./join";
-import leaveComponent from "./leave";
-import newGameComponent from "./new-game";
-import toggleAccessComponent from "./toggle-access";
+import acceptComponent from './accept';
+import declineComponent from './decline';
+import deleteComponent from './delete';
+import joinComponent from './join';
+import leaveComponent from './leave';
+import newGameComponent from './new-game';
+import toggleAccessComponent from './toggle-access';
 
 export enum ComponentKeys {
   ACCEPT = 'accept',
