@@ -81,25 +81,35 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
       content = 'The vote was inconclusive.';
     } else if (Array.isArray(voteResult)) {
       const [lastPlayer, ...players] = voteResult.map((id) => `<@${id}>`).reverse();
-      content = `It was a split vote between ${players.length > 0 ? `${players.join(', ')} and ${lastPlayer}` : lastPlayer}.`;
+      content = `It was a split vote between ${
+        players.length > 0 ? `${players.join(', ')} and ${lastPlayer}` : lastPlayer
+      }.`;
     } else {
       content = `It was a unanimous vote for <@${voteResult}>.`;
     }
 
     await ctx.editOriginal({
       content,
-      embeds: voteCounts.size === 0 ? [] : [{
-        title: 'Vote Totals',
-        fields: [{
-          name: 'Player',
-          value: [...voteCounts.keys()].map((id) => `<@${id}>`).join('\n'),
-          inline: true
-        }, {
-          name: 'Votes',
-          value: [...voteCounts.values()].join('\n'),
-          inline: true
-        }]
-      }],
+      embeds:
+        voteCounts.size === 0
+          ? []
+          : [
+              {
+                title: 'Vote Totals',
+                fields: [
+                  {
+                    name: 'Player',
+                    value: [...voteCounts.keys()].map((id) => `<@${id}>`).join('\n'),
+                    inline: true
+                  },
+                  {
+                    name: 'Votes',
+                    value: [...voteCounts.values()].join('\n'),
+                    inline: true
+                  }
+                ]
+              }
+            ],
       components: []
     });
 

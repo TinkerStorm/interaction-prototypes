@@ -1,7 +1,7 @@
-import { Client as ErisClient } from "eris";
-import { ButtonStyle, ComponentContext, ComponentType, Permissions } from "slash-create";
+import { Client as ErisClient } from 'eris';
+import { ButtonStyle, ComponentContext, ComponentType, Permissions } from 'slash-create';
 
-import { games, lobbyChannels, buildPost } from "../util/game";
+import { games, lobbyChannels, buildPost } from '../util/game';
 
 export default async (ctx: ComponentContext, client: ErisClient) => {
   const game = games.get(ctx.channelID);

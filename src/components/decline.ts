@@ -1,7 +1,7 @@
-import { Client as ErisClient } from "eris";
-import { ComponentContext } from "slash-create";
+import { Client as ErisClient } from 'eris';
+import { ComponentContext } from 'slash-create';
 
-import { games } from "../util/game";
+import { games } from '../util/game';
 
 export default async (ctx: ComponentContext, client: ErisClient) => {
   const game = games.get(ctx.channelID);
@@ -33,4 +33,4 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
   });
 
   await ctx.delete(ctx.message.id);
-}
+};

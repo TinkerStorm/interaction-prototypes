@@ -1,4 +1,4 @@
-import { ComponentContext, SlashCreator } from "slash-create";
+import { ComponentContext, SlashCreator } from 'slash-create';
 
 import { ComponentListener, MethodDictionary } from '../util/types';
 
@@ -19,10 +19,10 @@ export default class SlashComponent<Methods extends MethodDictionary> {
     return this;
   }
 
-  withMethod<
-    Key extends string,
-    Method extends (...args: any[]) => any
-  >(key: Key, method: Method): SlashComponent<Methods & { [key in Key]: Method }> {
+  withMethod<Key extends string, Method extends (...args: any[]) => any>(
+    key: Key,
+    method: Method
+  ): SlashComponent<Methods & { [key in Key]: Method }> {
     this._methods[key] = method;
     return this as any as SlashComponent<Methods & { [key in Key]: Method }>;
   }
@@ -41,8 +41,7 @@ export default class SlashComponent<Methods extends MethodDictionary> {
     const methods = this._methods;
 
     creator.registerGlobalComponent(this.id, async (ctx: ComponentContext) => {
-      if (this._predicate && !await this._predicate(ctx, creator.client, methods as Methods))
-        return;
+      if (this._predicate && !(await this._predicate(ctx, creator.client, methods as Methods))) return;
 
       await this._run(ctx, creator.client, methods as Methods);
     });

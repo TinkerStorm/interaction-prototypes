@@ -1,7 +1,7 @@
-import { AdvancedMessageContent, Client as ErisClient } from "eris";
-import { ComponentType, ButtonStyle, ComponentContext } from "slash-create";
+import { AdvancedMessageContent, Client as ErisClient } from 'eris';
+import { ComponentType, ButtonStyle, ComponentContext } from 'slash-create';
 
-import { games, lobbyChannels, buildPost } from "../util/game";
+import { games, lobbyChannels, buildPost } from '../util/game';
 
 export default async (ctx: ComponentContext, client: ErisClient) => {
   const game = games.get(ctx.channelID);
@@ -50,4 +50,4 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
   });
 
   await ctx.send(`Game is now **${game.isPrivate ? 'private 🔒' : 'public 🔓'}**`, { ephemeral: true });
-}
+};
