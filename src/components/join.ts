@@ -22,7 +22,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
   };
 
   if (!game) {
-    return reply('There is no game in progress.');
+    return reply('I do not recognize this channel as a game lobby.');
   }
 
   if (game.players.some((p) => p.id === ctx.member.id)) {
