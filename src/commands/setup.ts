@@ -72,11 +72,11 @@ export default class SetupCommand extends SlashCommand<Client> {
   async run(ctx: CommandContext) {
     const lobbyOptions = lobbyChannels.get(ctx.guildID);
 
-    const response = ctx.options.skip_confirm as boolean
-      ? 'Setting up game handler...'
+    const response = (ctx.options.skip_confirm as boolean)
+      ? { content : 'Setting up game handler...' }
       : this.getConfirmMessage(ctx.options as SetupOptions, lobbyOptions)
 
-    await ctx.send(response, { ephemeral: true });
+    await ctx.send({ ...response, ephemeral: true });
 
     await ctx.fetch();
 
