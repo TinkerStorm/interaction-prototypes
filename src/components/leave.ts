@@ -45,7 +45,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
   await client.createMessage(game.id, {
     embeds: [
       {
-        title: `${ctx.member.nick || ctx.user.username} has left the game.`,
+        title: `${ctx.member.mention} has left the game.`,
         thumbnail: {
           url: ctx.member.avatarURL
         },

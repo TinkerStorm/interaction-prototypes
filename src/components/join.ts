@@ -7,7 +7,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
 
   // ensure interaction is from the lobby channel
   if (ctx.channelID !== channelID) {
-    ctx.send('Unknown interaction origin...');
+    ctx.send('Unknown interaction origin.');
     return;
   }
 
@@ -22,11 +22,11 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
   };
 
   if (!game) {
-    return reply('I do not recognize this channel as a game lobby.');
+    return reply('I do not recognize this channel as a lobby channel.');
   }
 
   if (game.players.some((p) => p.id === ctx.member.id)) {
-    return reply('You are already in the game.');
+    return reply('You are already in the game lobby.');
   }
 
   if (game.requests.some((r) => r.id === ctx.member.id)) {
@@ -84,7 +84,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
       ]
     });
 
-    return reply('Request sent.');
+    return reply('Your request has been sent.');
   } else {
     game.players.push(ctx.member);
 
@@ -114,7 +114,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
     await client.createMessage(game.id, {
       embeds: [
         {
-          title: `${ctx.member.nick || ctx.user.username} has joined the game.`,
+          title: `${ctx.member.mention} has joined the game.`,
           thumbnail: {
             url: ctx.member.avatarURL
           },
