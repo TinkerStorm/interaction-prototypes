@@ -5,14 +5,6 @@ import { lobbyChannels, games, buildPost } from '../util/game';
 export default async (ctx: ComponentContext, client: ErisClient) => {
   const { channelID, gamePromptID } = lobbyChannels.get(ctx.guildID);
 
-  // ensure interaction is from the lobby channel
-  if (ctx.channelID !== channelID) {
-    ctx.send('Unknown interaction origin.');
-    return;
-  }
-
-  const game = games.get(ctx.message.embeds[0].footer.text);
-
   const reply = (options: MessageOptions | string) => {
     if (typeof options === 'string') {
       options = { content: options };
@@ -20,6 +12,14 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
 
     ctx.send({ ...options, ephemeral: true });
   };
+
+  // ensure interaction is from the lobby channel
+  if (ctx.channelID !== channelID) {
+    reply('Unknown interaction origin.');
+    return;
+  }
+
+  const game = games.get(ctx.message.embeds[0].footer.text);
 
   if (!game) {
     return reply('I do not recognize this channel as a lobby channel.');
