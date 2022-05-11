@@ -17,7 +17,8 @@ A collection of interaction prototypes made purely for testing, with the intenti
   - [Dec 26th 2021 - Channel creation](https://twitter.com/SudoJunior/status/1475215703515054083)
   - [Dec 28th 2021 - Join requests and cleanup](https://twitter.com/SudoJunior/status/1475898353473011715)
 - [Apr 2nd 2022 - Vote mockup](https://twitter.com/TinkerStorm/status/1510042509321379842)
-- [May 7th 2022 - Full automation](https://twitter.com/TinkerStorm/status/1523051267454824448)
+- [May 7th 2022 - Full automation](https://twitter.com/TinkerStorm/status/1523051267454824448) - #2
+  - [May 10th 2022 - Ephemeral setup wizard](https://twitter.com/TinkerStorm/status/1523806105117376512) - #10
 
 ## License
 
