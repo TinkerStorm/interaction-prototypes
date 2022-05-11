@@ -21,4 +21,4 @@ A collection of interaction prototypes made purely for testing, with the intenti
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for more information.
+This project is licensed under the [GNU General Public License v3.0](https://choosealicense.com/licenses/gpl-3.0). See the [LICENSE](LICENSE) file for more information.
