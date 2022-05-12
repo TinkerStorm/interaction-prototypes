@@ -1,7 +1,9 @@
 {
   "name": "interaction-prototypes",
   "version": "1.0.0",
-  "license": "MIT",
+  "license": "GPL-3.0",
+  "private": true,
+  "author": "Junior <sudojunior@outlook.com>",
   "description": "A collection of interaction prototypes made purely for testing.",
   "main": "dist/index.js",
   "scripts": {
