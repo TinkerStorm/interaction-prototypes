@@ -25,16 +25,16 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
     return reply('I do not recognize this channel as a lobby channel.');
   }
 
+  if (game.players.length >= 15) {
+    return reply('The game is full.');
+  }
+
   if (game.players.some((p) => p.id === ctx.member.id)) {
     return reply('You are already in the game lobby.');
   }
 
   if (game.requests.some((r) => r.id === ctx.member.id)) {
     return reply('You have already requested to join this game.');
-  }
-
-  if (game.players.length >= 15) {
-    return reply('The game is full.');
   }
 
   // try {
