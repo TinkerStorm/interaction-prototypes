@@ -15,8 +15,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
 
   // ensure interaction is from the lobby channel
   if (ctx.channelID !== channelID) {
-    reply('Unknown interaction origin.');
-    return;
+    return reply('Unknown interaction origin.');
   }
 
   const game = games.get(ctx.message.embeds[0].footer.text);
@@ -45,7 +44,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
   if (game.isPrivate) {
     game.requests.push(ctx.member);
 
-    client.createMessage(game.id, {
+    await client.createMessage(game.id, {
       content: `<@${game.host.id}>`,
       embeds: [
         {
