@@ -37,7 +37,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
   const { channelID: lobbyChannelID, gamePromptID, categoryID } = lobbyChannels.get(ctx.guildID);
 
   if (ctx.channelID !== lobbyChannelID) {
-    ctx.send('Unknown interaction origin...', { ephemeral: true });
+    ctx.send('Unknown interaction origin.', { ephemeral: true });
     return;
   }
 

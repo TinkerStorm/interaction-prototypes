@@ -7,12 +7,12 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
   const game = games.get(ctx.channelID);
 
   if (!game) {
-    ctx.send('You are not in a game', { ephemeral: true });
+    ctx.send('I do not recognize this channel as a lobby channel.', { ephemeral: true });
     return;
   }
 
   if (game.host.id !== ctx.member.id) {
-    ctx.send('You are not the host of this game', { ephemeral: true });
+    ctx.send('You are not the host of this game.', { ephemeral: true });
     return;
   }
 

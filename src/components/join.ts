@@ -5,14 +5,6 @@ import { lobbyChannels, games, buildPost } from '../util/game';
 export default async (ctx: ComponentContext, client: ErisClient) => {
   const { channelID, gamePromptID } = lobbyChannels.get(ctx.guildID);
 
-  // ensure interaction is from the lobby channel
-  if (ctx.channelID !== channelID) {
-    ctx.send('Unknown interaction origin...');
-    return;
-  }
-
-  const game = games.get(ctx.message.embeds[0].footer.text);
-
   const reply = (options: MessageOptions | string) => {
     if (typeof options === 'string') {
       options = { content: options };
@@ -21,20 +13,27 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
     ctx.send({ ...options, ephemeral: true });
   };
 
+  // ensure interaction is from the lobby channel
+  if (ctx.channelID !== channelID) {
+    return reply('Unknown interaction origin.');
+  }
+
+  const game = games.get(ctx.message.embeds[0].footer.text);
+
   if (!game) {
-    return reply('There is no game in progress.');
-  }
-
-  if (game.players.some((p) => p.id === ctx.member.id)) {
-    return reply('You are already in the game.');
-  }
-
-  if (game.requests.some((r) => r.id === ctx.member.id)) {
-    return reply('You have already requested to join this game.');
+    return reply('I do not recognize this channel as a lobby channel.');
   }
 
   if (game.players.length >= 15) {
     return reply('The game is full.');
+  }
+
+  if (game.players.some((p) => p.id === ctx.member.id)) {
+    return reply('You are already in the game lobby.');
+  }
+
+  if (game.requests.some((r) => r.id === ctx.member.id)) {
+    return reply('You have already requested to join this game.');
   }
 
   // try {
@@ -45,7 +44,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
   if (game.isPrivate) {
     game.requests.push(ctx.member);
 
-    client.createMessage(game.id, {
+    await client.createMessage(game.id, {
       content: `<@${game.host.id}>`,
       embeds: [
         {
@@ -84,7 +83,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
       ]
     });
 
-    return reply('Request sent.');
+    return reply('Your request has been sent.');
   } else {
     game.players.push(ctx.member);
 
@@ -114,7 +113,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
     await client.createMessage(game.id, {
       embeds: [
         {
-          title: `${ctx.member.nick || ctx.user.username} has joined the game.`,
+          title: `${ctx.member.mention} has joined the game.`,
           thumbnail: {
             url: ctx.member.avatarURL
           },
