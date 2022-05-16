@@ -4,6 +4,7 @@ import { keyFilter } from '../util/common';
 
 import { games, IGame, lobbyChannels } from '../util/game';
 import { FileAttachment } from '../util/types';
+import { ComponentKeys } from './index';
 
 const createFileEmbed = (game: IGame): AdvancedMessageContent => ({
   embeds: [
@@ -53,7 +54,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
             {
               type: ComponentType.BUTTON,
               label: 'New Game',
-              custom_id: 'new-game',
+              custom_id: ComponentKeys.NEW_GAME,
               style: ButtonStyle.PRIMARY,
               emoji: {
                 name: '🎮'

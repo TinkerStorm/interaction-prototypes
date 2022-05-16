@@ -2,6 +2,7 @@ import { AdvancedMessageContent, Client as ErisClient } from 'eris';
 import { ComponentType, ButtonStyle, ComponentContext } from 'slash-create';
 
 import { games, lobbyChannels, buildPost } from '../util/game';
+import { ComponentKeys } from './index';
 
 export default async (ctx: ComponentContext, client: ErisClient) => {
   const game = games.get(ctx.channelID);
@@ -29,7 +30,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
           {
             type: ComponentType.BUTTON,
             label: 'Delete',
-            custom_id: 'delete',
+            custom_id: ComponentKeys.DELETE,
             style: ButtonStyle.SECONDARY,
             emoji: {
               name: '🗑'
@@ -38,7 +39,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
           {
             type: ComponentType.BUTTON,
             label: `Set to ${game.isPrivate ? 'Public' : 'Private'}`,
-            custom_id: 'toggle-access',
+            custom_id: ComponentKeys.TOGGLE_ACCESS,
             style: game.isPrivate ? ButtonStyle.SUCCESS : ButtonStyle.DESTRUCTIVE,
             emoji: {
               name: game.isPrivate ? '🔓' : '🔒'

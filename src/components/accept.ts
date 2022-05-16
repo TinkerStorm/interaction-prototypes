@@ -1,6 +1,7 @@
-import { Client as ErisClient } from 'eris';
+import { AdvancedMessageContentEdit, Client as ErisClient } from 'eris';
 import { ButtonStyle, ComponentContext, ComponentType, Permissions } from 'slash-create';
 
+import { ComponentKeys } from './index';
 import { games, lobbyChannels, buildPost } from '../util/game';
 
 export default async (ctx: ComponentContext, client: ErisClient) => {
@@ -21,7 +22,8 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
   const [member] = game.requests.splice(index, 1);
   game.players.push(member);
 
-  await client.editMessage(channelID, game.postID, buildPost(game) as any);
+  await client.editMessage(channelID, game.postID, buildPost<AdvancedMessageContentEdit>(game));
+
   await client.editMessage(channelID, gamePromptID, {
     components: [
       {
@@ -30,11 +32,9 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
           {
             type: ComponentType.BUTTON,
             label: 'New Game',
-            custom_id: 'new-game',
+            custom_id: ComponentKeys.NEW_GAME,
             style: ButtonStyle.PRIMARY,
-            emoji: {
-              name: '🎮'
-            },
+            emoji: { name: '🎮' },
             disabled: false
           }
         ]
@@ -61,10 +61,8 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
   await client.createMessage(game.id, {
     embeds: [
       {
-        title: `${member.nick || member.user.username} has joined the game.`,
-        image: {
-          url: member.avatarURL
-        },
+        title: `${member.displayName} has joined the game.`,
+        image: { url: member.avatarURL },
         color: game.color
       }
     ]
