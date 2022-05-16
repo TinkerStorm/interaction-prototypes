@@ -2,6 +2,7 @@ import { Client as ErisClient } from 'eris';
 import { ButtonStyle, ComponentContext, ComponentType, MessageOptions } from 'slash-create';
 
 import { lobbyChannels, games, buildPost } from '../util/game';
+import { ComponentKeys } from './index';
 
 export default async (ctx: ComponentContext, client: ErisClient) => {
   const { channelID, gamePromptID } = lobbyChannels.get(ctx.guildID);
@@ -63,7 +64,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
             {
               type: ComponentType.BUTTON,
               label: 'New Game',
-              custom_id: 'new-game',
+              custom_id: ComponentKeys.NEW_GAME,
               style: ButtonStyle.PRIMARY,
               emoji: {
                 name: '🎮'

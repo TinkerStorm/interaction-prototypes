@@ -94,7 +94,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
             {
               type: ComponentType.BUTTON,
               label: 'Delete',
-              custom_id: 'delete',
+              custom_id: ComponentKeys.DELETE,
               style: ButtonStyle.SECONDARY,
               emoji: {
                 name: '🗑'
@@ -103,7 +103,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
             {
               type: ComponentType.BUTTON,
               label: 'Set to Public',
-              custom_id: 'toggle-access',
+              custom_id: ComponentKeys.TOGGLE_ACCESS,
               style: ButtonStyle.SUCCESS,
               emoji: {
                 name: '🔓'
@@ -129,7 +129,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
             {
               type: ComponentType.BUTTON,
               label: 'New Game',
-              custom_id: 'new-game',
+              custom_id: ComponentKeys.NEW_GAME,
               style: ButtonStyle.PRIMARY,
               emoji: {
                 name: '🎮'
