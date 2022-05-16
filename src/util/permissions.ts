@@ -1,37 +1,47 @@
 import { Permissions } from 'slash-create';
 
-// const allChannelPermissions = new Permissions([
-//  'CREATE_INSTANT_INVITE',
-//  'MANAGE_CHANNELS',
-//  'ADD_REACTIONS',
-//  'VIEW_CHANNEL',
-//  'SEND_MESSAGES',
-//  'MANAGE_MESSAGES',
-//  'EMBED_LINKS',
-//  'ATTACH_FILES',
-//  'READ_MESSAGE_HISTORY',
-//  'MENTION_EVERYONE',
-//  'USE_EXTERNAL_EMOJIS',
-//  // 'CONNECT',
-//  // 'SPEAK'
-// ])
-
-export const spectatorOverwrite = new Permissions(['VIEW_CHANNEL', 'READ_MESSAGE_HISTORY']);
+export const spectatorPermissions = new Permissions(['VIEW_CHANNEL', 'READ_MESSAGE_HISTORY']);
 
 export const playerPermissions = new Permissions([
-  spectatorOverwrite,
+  spectatorPermissions,
   'SEND_MESSAGES',
   'SEND_MESSAGES_IN_THREADS',
   'USE_EXTERNAL_EMOJIS'
 ]);
 
-export const observerPermissions = new Permissions([spectatorOverwrite, 'MANAGE_THREADS']);
+export const observerPermissions = new Permissions([spectatorPermissions, 'MANAGE_THREADS']);
 
 export const managerPermissions = new Permissions([
   playerPermissions,
   observerPermissions,
   'MANAGE_CHANNELS',
-  'CREATE_INSTANT_INVITE',
   'EMBED_LINKS',
   'ADD_REACTIONS'
+]);
+
+// all required permissions
+export const allChannelPermissions = new Permissions([
+  managerPermissions,
+  'MANAGE_MESSAGES',
+  'MANAGE_ROLES',
+  'EMBED_LINKS',
+  'READ_MESSAGE_HISTORY',
+  'USE_EXTERNAL_EMOJIS'
+  // 'CONNECT',
+  // 'SPEAK'
+]);
+
+// all optional permissions
+export const allChannelOptionalPermissions = new Permissions([
+  allChannelPermissions,
+  // General permissions
+  'CREATE_INSTANT_INVITE',
+
+  // Text permissions
+  'ATTACH_FILES',
+  'MENTION_EVERYONE',
+
+  // Voice permissions
+  'CONNECT',
+  'SPEAK'
 ]);

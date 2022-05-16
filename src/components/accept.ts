@@ -3,6 +3,7 @@ import { ButtonStyle, ComponentContext, ComponentType, Permissions } from 'slash
 
 import { ComponentKeys } from './index';
 import { games, lobbyChannels, buildPost } from '../util/game';
+import { playerPermissions } from '../util/permissions';
 
 export default async (ctx: ComponentContext, client: ErisClient) => {
   const game = games.get(ctx.channelID);
@@ -53,10 +54,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
             color: game.color
           }
         ]
-      }),
-      client.editChannelPermission(game.id, member.id, Permissions.FLAGS.VIEW_CHANNEL, 0, 1)
-    ];
-  });
+  await client.editChannelPermission(game.id, member.id, playerPermissions.bitfield, 0, 1);
 
   await client.createMessage(game.id, {
     embeds: [
