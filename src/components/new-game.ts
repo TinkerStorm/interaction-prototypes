@@ -12,6 +12,7 @@ import {
 import { pickPhonetic } from '../util/fakerExtended';
 import { buildPost, createGame, games, IGame, lobbyChannels } from '../util/game';
 import { managerPermissions, observerPermissions } from '../util/permissions';
+import { ComponentKeys } from './index';
 
 const createModalOptions = (): ModalOptions => ({
   title: 'New Game',

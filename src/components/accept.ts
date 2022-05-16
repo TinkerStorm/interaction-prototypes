@@ -2,6 +2,7 @@ import { AdvancedMessageContentEdit, Client as ErisClient } from 'eris';
 import { ButtonStyle, ComponentContext, ComponentType, Permissions } from 'slash-create';
 
 import { ComponentKeys } from './index';
+import { undi } from '../util/common';
 import { games, lobbyChannels, buildPost } from '../util/game';
 import { playerPermissions } from '../util/permissions';
 
@@ -43,9 +44,8 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
     ]
   });
 
-  // send message to user
-  await client.getDMChannel(member.id).then((channel) => {
-    return [
+  try {
+    await client.getDMChannel(member.id).then((channel) =>
       channel.createMessage({
         embeds: [
           {
@@ -54,7 +54,17 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
             color: game.color
           }
         ]
-  await client.editChannelPermission(game.id, member.id, playerPermissions.bitfield, 0, 1);
+      })
+    );
+  } catch (err) {
+    ctx.creator.emit(
+      'debug',
+      `Could not send message to ${undi(member.user)} on ${ctx.guildID}, continuing anyway.\n\t` +
+        (err as Error).message
+    );
+  }
+
+  await client.editChannelPermission(game.id, member.id, Permissions.FLAGS.VIEW_CHANNEL, 0, 1);
 
   await client.createMessage(game.id, {
     embeds: [

@@ -1,6 +1,7 @@
 import { Client as ErisClient } from 'eris';
 import { ComponentContext } from 'slash-create';
 
+import { undi } from '../util/common';
 import { games } from '../util/game';
 
 export default async (ctx: ComponentContext, client: ErisClient) => {
@@ -20,17 +21,25 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
   const [member] = game.requests.splice(index, 1);
 
   // send message to user
-  await client.getDMChannel(member.id).then((channel) => {
-    return channel.createMessage({
-      embeds: [
-        {
-          title: 'Game Request Declined',
-          description: `Your request to join the game '${game.title} (\`${game.id}\`)' has been declined.`,
-          color: game.color
-        }
-      ]
-    });
-  });
+  try {
+    await client.getDMChannel(member.id).then((channel) =>
+      channel.createMessage({
+        embeds: [
+          {
+            title: 'Game Request Declined',
+            description: `Your request to join the game '${game.title} (\`${game.id}\`)' has been declined.`,
+            color: game.color
+          }
+        ]
+      })
+    );
+  } catch (err) {
+    ctx.creator.emit(
+      'debug',
+      `Could not send message to ${undi(member.user)} on ${ctx.guildID}, continuing anyway.\n\t` +
+        (err as Error).message
+    );
+  }
 
   await ctx.delete(ctx.message.id);
 };
