@@ -64,7 +64,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
     );
   }
 
-  await client.editChannelPermission(game.id, member.id, Permissions.FLAGS.VIEW_CHANNEL, 0, 1);
+  await client.editChannelPermission(game.id, member.id, playerPermissions.bitfield, 0, 1);
 
   await client.createMessage(game.id, {
     embeds: [
