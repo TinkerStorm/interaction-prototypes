@@ -1,5 +1,5 @@
 import { Client } from 'eris';
-import { CommandContext, ComponentType, SlashCommand, SlashCreator } from 'slash-create';
+import { CommandContext, ComponentSelectOption, ComponentType, SlashCommand, SlashCreator } from 'slash-create';
 import { wait } from '../util/common';
 import { determineResult } from '../functions/ballot';
 import { games } from '../util/game';
@@ -30,12 +30,18 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
               max_values: 1,
               custom_id: 'vote',
               placeholder: 'Select a player to put on trial',
-              options: game.players.map((player) => {
-                return {
-                  label: player.nick || player.user.username,
-                  value: player.id
-                };
-              })
+              options: game.players
+                .map<ComponentSelectOption>((player) => {
+                  return {
+                    label: player.nick || player.user.username,
+                    value: player.id
+                  };
+                })
+                .concat({
+                  description: 'Abstain from voting',
+                  label: 'None',
+                  value: 'none'
+                })
             }
           ]
         }
@@ -47,6 +53,17 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
     const ballot = new Map<string, string>();
 
     ctx.registerComponent('vote', async (selectCtx) => {
+      selectCtx.defer(true);
+      console.log(selectCtx.values);
+      if (selectCtx.values[0] === 'none') {
+        if (ballot.has(selectCtx.user.id)) {
+          ballot.delete(selectCtx.user.id);
+          return selectCtx.send('Abstained from voting.', { ephemeral: true });
+        } else {
+          return selectCtx.send('You have not voted yet.', { ephemeral: true });
+        }
+      }
+
       if (game.players.findIndex((p) => p.id === selectCtx.user.id) === -1) {
         selectCtx.send('You are not in this game.', { ephemeral: true });
       }
