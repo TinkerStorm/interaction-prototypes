@@ -27,8 +27,6 @@ export const allChannelPermissions = new Permissions([
   'EMBED_LINKS',
   'READ_MESSAGE_HISTORY',
   'USE_EXTERNAL_EMOJIS'
-  // 'CONNECT',
-  // 'SPEAK'
 ]);
 
 // all optional permissions
