@@ -14,7 +14,7 @@ import {
 
 import { checkPermissions, undi } from '../util/common';
 import { lobbyChannels } from '../util/game';
-import { managerPermissions } from '../util/permissions';
+import { allChannelPermissions } from '../util/permissions';
 import { LobbyOptions, SetupOptions } from '../util/types';
 
 export default class SetupCommand extends SlashCommand<Client> {
@@ -146,14 +146,14 @@ export default class SetupCommand extends SlashCommand<Client> {
       checkPermissions({
         channelEntity: lobbyChannel,
         targetID: this.client.user.id,
-        permissions: managerPermissions,
+        permissions: allChannelPermissions,
         action: 'lobby channel'
       });
 
       checkPermissions({
         channelEntity: lobbyCategory,
         targetID: this.client.user.id,
-        permissions: managerPermissions,
+        permissions: allChannelPermissions,
         action: 'lobby category'
       });
     } catch (err) {
