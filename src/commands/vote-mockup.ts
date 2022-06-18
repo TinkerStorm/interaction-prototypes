@@ -19,8 +19,24 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
 
     const game = games.get(ctx.channelID);
 
+    const start = Date.now();
+    const duration = 1000 * 5;
+    const ballot = new Map<string, string>();
+
+    const getRemainingTime = () => `<t:${Math.round((start + duration) / 1000)}:R>`;
+
+    const getBallotEmbed = () => ({
+      title: `Vote for ${game.title}`,
+      description: `Ballot closes ${getRemainingTime()}`,
+      color: game.color,
+      // stretch option?: scale the color based on the number of votes? or just use game color as is?
+      footer: {
+        text: `${ballot.size} of ${game.players.length} players have voted`
+      }
+    });
+
     await ctx.send({
-      content: `Vote mockup (0 / ${game.players.length})`,
+      embeds: [getBallotEmbed()],
       components: [
         {
           type: ComponentType.ACTION_ROW,
@@ -44,30 +60,32 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
 
     await ctx.fetch();
 
-    const ballot = new Map<string, string>();
-
     ctx.registerComponent('vote', async (selectCtx) => {
-      if (game.players.findIndex((p) => p.id === selectCtx.user.id) === -1) {
-        selectCtx.send('You are not in this game.', { ephemeral: true });
+      console.log(`Received vote with ${start + duration - Date.now()}ms remaining`);
+
+      if (game.players.findIndex((p) => p.id === selectCtx.user.id) === -1)
+        return selectCtx.send('You are not in this game.', { ephemeral: true });
+
+      if (start + duration < Date.now()) {
+        return selectCtx.send('The vote has ended.', { ephemeral: true });
       }
 
       const currentVote = ballot.get(selectCtx.user.id);
       const newVote = selectCtx.values[0];
 
       if (currentVote === newVote) {
-        await selectCtx.send('Unchanged.', { ephemeral: true });
-        return;
+        return selectCtx.send('Unchanged.', { ephemeral: true });
       }
 
       ballot.set(selectCtx.user.id, newVote);
       await selectCtx.send(`You have voted for <@${newVote}>.`, { ephemeral: true });
 
       await selectCtx.editParent({
-        content: `Vote mockup (${ballot.size} / ${game.players.length})`
+        embeds: [getBallotEmbed()]
       });
     });
 
-    await wait(1000 * 20); // 20 seconds
+    await wait(duration - 500); // 20 seconds minus 1 second for the wait() - idk why
     ctx.unregisterComponent('vote');
 
     // determine group of players who voted the same
@@ -95,6 +113,7 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
           ? []
           : [
               {
+                color: game.color,
                 title: 'Vote Totals',
                 fields: [
                   {
