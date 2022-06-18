@@ -20,7 +20,7 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
     const game = games.get(ctx.channelID);
 
     const start = Date.now();
-    const duration = 1000 * 5;
+    const duration = 1000 * 20;
     const ballot = new Map<string, string>();
 
     const getRemainingTime = () => `<t:${Math.round((start + duration) / 1000)}:R>`;
@@ -85,7 +85,7 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
       });
     });
 
-    await wait(duration - 500); // 20 seconds minus 1 second for the wait() - idk why
+    await wait(duration - 1000); // 20 seconds minus 1 second for the wait - idk why
     ctx.unregisterComponent('vote');
 
     // determine group of players who voted the same
