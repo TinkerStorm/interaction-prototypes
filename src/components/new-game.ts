@@ -10,8 +10,9 @@ import {
 } from 'slash-create';
 
 import { pickPhonetic } from '../util/fakerExtended';
-import { buildPost, createGame, games, IGame, lobbyChannels } from '../util/game';
+import { buildPost, createGame, games, lobbyChannels } from '../util/game';
 import { managerPermissions, observerPermissions } from '../util/permissions';
+import { IGame } from '../util/types';
 import { ComponentKeys } from './index';
 
 const createModalOptions = (): ModalOptions => ({

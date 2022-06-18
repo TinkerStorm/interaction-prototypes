@@ -1,5 +1,5 @@
 import { AdvancedMessageContentEdit, Client as ErisClient } from 'eris';
-import { ButtonStyle, ComponentContext, ComponentType, Permissions } from 'slash-create';
+import { ButtonStyle, ComponentContext, ComponentType } from 'slash-create';
 
 import { ComponentKeys } from './index';
 import { undi } from '../util/common';

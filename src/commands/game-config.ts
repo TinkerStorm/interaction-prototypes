@@ -10,7 +10,8 @@ import {
   SlashCreator
 } from 'slash-create';
 
-import { buildPost, games, IGame, lobbyChannels } from '../util/game';
+import { buildPost, games, lobbyChannels } from '../util/game';
+import { IGame } from '../util/types';
 
 export default class GameConfig extends SlashCommand<ErisClient> {
   constructor(creator: SlashCreator) {
