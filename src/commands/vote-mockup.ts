@@ -80,6 +80,15 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
       ballot.set(selectCtx.user.id, newVote);
       await selectCtx.send(`You have voted for <@${newVote}>.`, { ephemeral: true });
 
+      game.log.push({
+        type: 'vote-success',
+        context: {
+          origin: selectCtx.user.id,
+          oldVote: currentVote,
+          newVote
+        }
+      });
+
       await selectCtx.editParent({
         embeds: [getBallotEmbed()]
       });
