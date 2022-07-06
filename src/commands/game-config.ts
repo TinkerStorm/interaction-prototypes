@@ -88,7 +88,7 @@ export default class GameConfig extends SlashCommand<ErisClient> {
             },
             {
               name: 'Host',
-              value: game.host.nick || game.host.user.username,
+              value: game.host.displayName,
               inline: true
             }
           ]
