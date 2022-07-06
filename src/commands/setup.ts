@@ -24,6 +24,7 @@ export default class SetupCommand extends SlashCommand<Client> {
       description: 'Setup the game handler for the current guild.',
       dmPermission: false,
       requiredPermissions: ['MANAGE_GUILD', 'MANAGE_CHANNELS', 'MANAGE_ROLES'],
+      forcePermissions: true,
       options: [
         {
           name: 'lobby_channel',
