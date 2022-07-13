@@ -2,19 +2,7 @@ import { Client as ErisClient, Message, TextChannel } from 'eris';
 import { ButtonStyle, ComponentButton, ComponentType, Member, MessageEmbedOptions, SlashCreator } from 'slash-create';
 
 import { pickPhonetic } from './fakerExtended';
-import { LobbyOptions } from './types';
-
-export interface IGame {
-  title: string;
-  id: string;
-  players: Member[];
-  readonly host: Member;
-  requests: Member[];
-  postID: string;
-  color: number;
-  isPrivate: boolean;
-  log: Array<{ type: string; context: object }>;
-}
+import { IGame, LobbyOptions } from './types';
 
 export const games = new Map<string, IGame>();
 export const lobbyChannels = new Map<string, LobbyOptions>();
@@ -174,6 +162,28 @@ export function registerComponents(client: ErisClient, creator: SlashCreator) {
       const game = games.get(msg.channel.id);
       game.log.push({ type: 'messageCreate', context: msg });
       creator.emit('debug', `Pushed messageCreate for ${msg.id} to game ${game.id}`);
+    }
+
+    if (msg.content === '!component-test') {
+      client.createMessage(msg.channel.id, {
+        content: '',
+        components: [
+          {
+            type: ComponentType.ACTION_ROW,
+            components: [
+              {
+                type: ComponentType.BUTTON,
+                label: 'Test',
+                custom_id: 'test',
+                style: ButtonStyle.PRIMARY,
+                emoji: {
+                  id: '717399673140281464'
+                }
+              }
+            ]
+          }
+        ]
+      });
     }
   });
 }

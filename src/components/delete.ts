@@ -1,24 +1,24 @@
-import { AdvancedMessageContent, Client as ErisClient } from 'eris';
+import { /* AdvancedMessageContent, */ Client as ErisClient } from 'eris';
 import { ComponentContext, ComponentType, ButtonStyle } from 'slash-create';
-import { keyFilter } from '../util/common';
+// import { keyFilter } from '../util/common';
 
-import { games, IGame, lobbyChannels } from '../util/game';
-import { FileAttachment } from '../util/types';
+import { games, lobbyChannels } from '../util/game';
+// import { FileAttachment, IGame } from '../util/types';
 import { ComponentKeys } from './index';
 
-const createFileEmbed = (game: IGame): AdvancedMessageContent => ({
-  embeds: [
-    {
-      title: `Message log upload for ${game.title} (${game.id})`,
-      color: game.color
-    }
-  ]
-});
+// const createFileEmbed = (game: IGame): AdvancedMessageContent => ({
+//  embeds: [
+//    {
+//      title: `Message log upload for ${game.title} (${game.id})`,
+//      color: game.color
+//    }
+//  ]
+// });
 
-const serializeGameLog = (game: IGame): FileAttachment => ({
-  name: `${game.title}-${game.id}.json`,
-  file: Buffer.from(JSON.stringify(game.log, keyFilter, 2))
-});
+// const serializeGameLog = (game: IGame): FileAttachment => ({
+//  name: `${game.title}-${game.id}.json`,
+//  file: Buffer.from(JSON.stringify(game.log, keyFilter, 2))
+// });
 
 export default async (ctx: ComponentContext, client: ErisClient) => {
   const game = games.get(ctx.channelID);

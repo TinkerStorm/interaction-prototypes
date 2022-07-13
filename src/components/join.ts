@@ -1,6 +1,8 @@
 import { Client as ErisClient } from 'eris';
-import { ButtonStyle, ComponentContext, ComponentType, MessageOptions, Permissions } from 'slash-create';
+import { ButtonStyle, ComponentContext, ComponentType, MessageOptions } from 'slash-create';
+
 import { lobbyChannels, games, buildPost } from '../util/game';
+import { playerPermissions } from '../util/permissions';
 
 export default async (ctx: ComponentContext, client: ErisClient) => {
   const { channelID, gamePromptID } = lobbyChannels.get(ctx.guildID);
@@ -87,7 +89,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
   } else {
     game.players.push(ctx.member);
 
-    await client.editChannelPermission(game.id, ctx.member.id, Permissions.FLAGS.VIEW_CHANNEL, 0, 1);
+    await client.editChannelPermission(game.id, ctx.member.id, playerPermissions.bitfield, 0, 1);
     await ctx.edit(ctx.message.id, buildPost<MessageOptions>(game));
 
     await client.editMessage(channelID, gamePromptID, {

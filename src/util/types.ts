@@ -1,4 +1,4 @@
-import { ComponentContext, Permissions, User as SlashUser } from 'slash-create';
+import { ComponentContext, Member, Permissions, User as SlashUser } from 'slash-create';
 import { Client as ErisClient, GuildChannel, User as ErisUser } from 'eris';
 
 // replacement interface for Eris.FileOptions
@@ -38,4 +38,16 @@ export interface LobbyOptions {
   channelID: string; // lobby channel
   categoryID: string; // lobby category
   gamePromptID: string; // new game message
+}
+
+export interface IGame {
+  title: string;
+  id: string;
+  players: Member[];
+  readonly host: Member;
+  requests: Member[];
+  postID: string;
+  color: number;
+  isPrivate: boolean;
+  log: Array<{ type: string; context: object }>;
 }
