@@ -6,9 +6,12 @@ import {
   ModalOptions,
   TextInputStyle,
   ButtonStyle,
-  MessageOptions
+  MessageOptions,
+  ComponentSelectMenu
 } from 'slash-create';
+import { randomColor } from '../util/common';
 
+import { BLOOD_RED, COLORS } from '../util/constants';
 import { pickPhonetic } from '../util/fakerExtended';
 import { buildPost, createGame, games, lobbyChannels } from '../util/game';
 import { managerPermissions, observerPermissions } from '../util/permissions';
@@ -29,6 +32,24 @@ const createModalOptions = (): ModalOptions => ({
           style: TextInputStyle.SHORT,
           max_length: 100,
           value: `${pickPhonetic()} ${pickPhonetic()}`
+        }
+      ]
+    },
+    {
+      type: ComponentType.ACTION_ROW,
+      components: [
+        {
+          type: ComponentType.SELECT,
+          placeholder: 'Select a color...',
+          custom_id: 'color',
+          max_values: 1,
+          options: COLORS.map(({ emoji, ...option }) => ({
+            ...option,
+            value: option.value.toString(16),
+            emoji: {
+              name: emoji
+            }
+          }))
         }
       ]
     }
@@ -54,6 +75,9 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
       return;
     }
 
+    const colorOption = modalCtx.data.data.components[1].components[0] as never as any;
+    const color = colorOption.values[0] !== 'random' ? parseInt(colorOption.values[0], 16) : randomColor();
+
     const categoryChannel = client.getChannel(categoryID) as CategoryChannel;
 
     const channel = await client.createChannel(ctx.guildID, game.title, 0, {
@@ -73,6 +97,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
 
     game.id = channel.id;
     game.postID = gamePromptID;
+    game.color = color;
 
     games.set(game.id, game);
 
@@ -121,7 +146,7 @@ export default async (ctx: ComponentContext, client: ErisClient) => {
       embeds: [
         {
           title: 'Begin a new game',
-          color: Math.round(0xffffff * Math.random())
+          color: BLOOD_RED
         }
       ],
       components: [

@@ -3,6 +3,7 @@ import { Permissions, SlashCreator } from 'slash-create';
 import { AccessCheckOptions, User } from './types';
 
 export const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+export const randomColor = () => Math.random() * 16777215;
 
 type ReplacerCondition = (key: any, value: any) => boolean;
 

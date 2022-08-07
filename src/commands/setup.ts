@@ -13,6 +13,7 @@ import {
 } from 'slash-create';
 
 import { checkPermissions, undi } from '../util/common';
+import { BLOOD_RED } from '../util/constants';
 import { lobbyChannels } from '../util/game';
 import { allChannelPermissions } from '../util/permissions';
 import { LobbyOptions, SetupOptions } from '../util/types';
@@ -58,7 +59,7 @@ export default class SetupCommand extends SlashCommand<Client> {
         {
           title: 'Setup Confirmation',
           description: 'Are you sure you want to setup the game handler for this guild?',
-          color: 0x00ff00,
+          color: BLOOD_RED,
           fields: [
             {
               name: 'Lobby Channel',
@@ -165,7 +166,7 @@ export default class SetupCommand extends SlashCommand<Client> {
       embeds: [
         {
           title: 'Begin a new game',
-          color: Math.floor(Math.random() * 16777215)
+          color: BLOOD_RED
         }
       ],
       components: [
