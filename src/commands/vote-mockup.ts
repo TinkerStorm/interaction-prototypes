@@ -27,6 +27,7 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
           components: [
             {
               type: ComponentType.SELECT,
+              min_values: 0,
               max_values: 1,
               custom_id: 'vote',
               placeholder: 'Select a player to put on trial',
