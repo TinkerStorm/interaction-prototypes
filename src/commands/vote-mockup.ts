@@ -31,18 +31,10 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
               max_values: 1,
               custom_id: 'vote',
               placeholder: 'Select a player to put on trial',
-              options: game.players
-                .map<ComponentSelectOption>((player) => {
-                  return {
-                    label: player.nick || player.user.username,
-                    value: player.id
-                  };
-                })
-                .concat({
-                  description: 'Abstain from voting',
-                  label: 'None',
-                  value: 'none'
-                })
+              options: game.players.map<ComponentSelectOption>((player) => ({
+                label: player.nick || player.user.username,
+                value: player.id
+              }))
             }
           ]
         }
@@ -54,25 +46,36 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
     const ballot = new Map<string, string>();
 
     ctx.registerComponent('vote', async (selectCtx) => {
-      selectCtx.defer(true);
-      console.log(selectCtx.values);
-      if (selectCtx.values[0] === 'none') {
-        if (ballot.has(selectCtx.user.id)) {
+      const { user, values } = selectCtx;
+
+      if (game.players.findIndex((p) => p.id === user.id) === -1) {
+        await selectCtx.send('You are not in this game.', { ephemeral: true });
+        return;
+      }
+
+      const oldVote = ballot.get(user.id);
+      const [newVote] = values;
+
+      if (!newVote) {
+        if (oldVote) {
           ballot.delete(selectCtx.user.id);
-          return selectCtx.send('Abstained from voting.', { ephemeral: true });
-        } else {
-          return selectCtx.send('You have not voted yet.', { ephemeral: true });
+          game.log.push({
+            type: 'vote:withdraw',
+            context: {
+              id: ctx.messageID,
+              user: user.id,
+              oldVote
+            }
+          });
         }
+
+        const content = !oldVote ? 'Abstained from voting.' : 'You have not voted yet.';
+        await selectCtx.send({ content, ephemeral: true });
+
+        return;
       }
 
-      if (game.players.findIndex((p) => p.id === selectCtx.user.id) === -1) {
-        selectCtx.send('You are not in this game.', { ephemeral: true });
-      }
-
-      const currentVote = ballot.get(selectCtx.user.id);
-      const newVote = selectCtx.values[0];
-
-      if (currentVote === newVote) {
+      if (oldVote === newVote) {
         await selectCtx.send('Unchanged.', { ephemeral: true });
         return;
       }
