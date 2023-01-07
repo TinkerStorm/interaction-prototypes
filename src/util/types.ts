@@ -1,4 +1,4 @@
-import { ComponentContext, Permissions, User as SlashUser } from 'slash-create';
+import { ComponentContext, Member, Permissions, User as SlashUser } from 'slash-create';
 import { Client as ErisClient, GuildChannel, User as ErisUser } from 'eris';
 
 // replacement interface for Eris.FileOptions
@@ -47,4 +47,16 @@ export interface ListTailOptions<T> {
   tail?: string;
   /** A transform method to use on the generic of T returning a string which is used  */
   injector?: (value: T) => string;
+}
+
+export interface IGame {
+  title: string;
+  id: string;
+  players: Member[];
+  readonly host: Member;
+  requests: Member[];
+  postID: string;
+  color: number;
+  isPrivate: boolean;
+  log: Array<{ type: string; context: object }>;
 }

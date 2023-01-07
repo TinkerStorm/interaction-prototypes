@@ -1,6 +1,8 @@
 # interaction-prototypes
+
+Deception is a bot made as a prototype to manage game lobbies for community servers. It's extended goal is to provide a stepping stone to play the game of Mafia or Werwolf through interactions, and lay the foundations for others to build upon.
+
 > Generated from `slash-create-template` using [`slash-up`](https://github.com/Snazzah/slash-up).
-A collection of interaction prototypes made purely for testing, with the intention of using them for services in the future.
 
 ## [Game lobby handler](./src/util/game.ts) ([Video](./assets/lobby-interaction-demo.mp4))
 
@@ -19,6 +21,7 @@ A collection of interaction prototypes made purely for testing, with the intenti
 - [Apr 2nd 2022 - Vote mockup](https://twitter.com/TinkerStorm/status/1510042509321379842)
 - [May 7th 2022 - Full automation](https://twitter.com/TinkerStorm/status/1523051267454824448) - #2
   - [May 10th 2022 - Ephemeral setup wizard](https://twitter.com/TinkerStorm/status/1523806105117376512) - #10
+- [Jun 18th 2022 - Vote coundown](https://twitter.com/TinkerStorm/status/1538190111959044104) - #27 
 
 ## License
 

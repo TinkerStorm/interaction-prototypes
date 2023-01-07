@@ -14,7 +14,7 @@ import {
 
 import { checkPermissions, undi } from '../util/common';
 import { lobbyChannels } from '../util/game';
-import { managerPermissions } from '../util/permissions';
+import { allChannelPermissions } from '../util/permissions';
 import { LobbyOptions, SetupOptions } from '../util/types';
 
 export default class SetupCommand extends SlashCommand<Client> {
@@ -24,6 +24,7 @@ export default class SetupCommand extends SlashCommand<Client> {
       description: 'Setup the game handler for the current guild.',
       dmPermission: false,
       requiredPermissions: ['MANAGE_GUILD', 'MANAGE_CHANNELS', 'MANAGE_ROLES'],
+      forcePermissions: true,
       options: [
         {
           name: 'lobby_channel',
@@ -146,14 +147,14 @@ export default class SetupCommand extends SlashCommand<Client> {
       checkPermissions({
         channelEntity: lobbyChannel,
         targetID: this.client.user.id,
-        permissions: managerPermissions,
+        permissions: allChannelPermissions,
         action: 'lobby channel'
       });
 
       checkPermissions({
         channelEntity: lobbyCategory,
         targetID: this.client.user.id,
-        permissions: managerPermissions,
+        permissions: allChannelPermissions,
         action: 'lobby category'
       });
     } catch (err) {
