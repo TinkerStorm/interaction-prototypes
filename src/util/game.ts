@@ -1,5 +1,6 @@
 import { Client as ErisClient, Message, TextChannel } from 'eris';
 import { ButtonStyle, ComponentButton, ComponentType, Member, MessageEmbedOptions, SlashCreator } from 'slash-create';
+import EmojiProgressBar from '../experiments/EmojiProgressBar';
 
 import { pickPhonetic } from './fakerExtended';
 import { IGame, LobbyOptions } from './types';
