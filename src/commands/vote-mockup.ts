@@ -1,6 +1,6 @@
 import { Client } from 'eris';
 import { CommandContext, ComponentSelectOption, ComponentType, SlashCommand, SlashCreator } from 'slash-create';
-import { wait } from '../util/common';
+import { joinListTail, wait } from '../util/common';
 import { determineResult } from '../functions/ballot';
 import { games } from '../util/game';
 
@@ -134,8 +134,11 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
     });
 
     game.log.push({
-      type: 'vote-result',
-      context: Object.fromEntries(ballot)
+      type: 'vote:result',
+      context: {
+        id: ctx.messageID,
+        ballot: Object.fromEntries(ballot)
+      }
     });
   }
 }
