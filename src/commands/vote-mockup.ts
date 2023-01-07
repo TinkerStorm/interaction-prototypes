@@ -133,27 +133,26 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
 
     await ctx.editOriginal({
       content,
-      embeds:
-        voteCounts.size === 0
-          ? []
-          : [
+      components: [],
+      ...(voteCounts.size === 0 && {
+        embeds: [
+          {
+            title: 'Vote Totals',
+            fields: [
               {
-                title: 'Vote Totals',
-                fields: [
-                  {
-                    name: 'Player',
-                    value: [...voteCounts.keys()].map((id) => `<@${id}>`).join('\n'),
-                    inline: true
-                  },
-                  {
-                    name: 'Votes',
-                    value: [...voteCounts.values()].join('\n'),
-                    inline: true
-                  }
-                ]
+                name: 'Player',
+                value: [...voteCounts.keys()].map((id) => `<@${id}>`).join('\n'),
+                inline: true
+              },
+              {
+                name: 'Votes',
+                value: [...voteCounts.values()].join('\n'),
+                inline: true
               }
-            ],
-      components: []
+            ]
+          }
+        ]
+      })
     });
 
     game.log.push({
