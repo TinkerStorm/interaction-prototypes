@@ -19,8 +19,24 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
 
     const game = games.get(ctx.channelID);
 
+    const start = Date.now();
+    const duration = 1000 * 20;
+    const ballot = new Map<string, string>();
+
+    const getRemainingTime = () => `<t:${Math.round((start + duration) / 1000)}:R>`;
+
+    const getBallotEmbed = () => ({
+      title: `Vote for ${game.title}`,
+      description: `Ballot closes ${getRemainingTime()}`,
+      color: game.color,
+      // stretch option?: scale the color based on the number of votes? or just use game color as is?
+      footer: {
+        text: `${ballot.size} of ${game.players.length} players have voted`
+      }
+    });
+
     await ctx.send({
-      content: `Vote mockup (0 / ${game.players.length})`,
+      embeds: [getBallotEmbed()],
       components: [
         {
           type: ComponentType.ACTION_ROW,
@@ -43,18 +59,9 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
 
     await ctx.fetch();
 
-    game.log.push({
-      type: 'vote:begin',
-      context: {
-        id: ctx.messageID,
-        timestamp: Date.now(),
-        requestedBy: ctx.user.id
-      }
-    });
-
-    const ballot = new Map<string, string>();
-
     ctx.registerComponent('vote', async (selectCtx) => {
+      console.log(`Received vote with ${start + duration - Date.now()}ms remaining`);
+
       const { user, values } = selectCtx;
 
       if (game.players.findIndex((p) => p.id === user.id) === -1) {
@@ -110,11 +117,11 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
       await selectCtx.send({ content, ephemeral: true });
 
       await selectCtx.editParent({
-        content: `Vote mockup (${ballot.size} / ${game.players.length})`
+        embeds: [getBallotEmbed()]
       });
     });
 
-    await wait(1000 * 20); // 20 seconds
+    await wait(duration - 1000); // 20 seconds minus 1 second for the wait - idk why
     ctx.unregisterComponent('vote');
 
     // determine group of players who voted the same
@@ -144,6 +151,7 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
       ...(voteCounts.size === 0 && {
         embeds: [
           {
+            color: game.color,
             title: 'Vote Totals',
             fields: [
               {
