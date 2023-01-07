@@ -88,6 +88,10 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
         return;
       }
 
+      const content = oldVote
+        ? `You have changed your vote from <@${oldVote}> to <@${newVote}>.`
+        : `You have voted for <@${newVote}>`;
+
       ballot.set(selectCtx.user.id, newVote);
 
       game.log.push({
@@ -100,7 +104,7 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
         }
       });
 
-      await selectCtx.send(`You have voted for <@${newVote}>.`, { ephemeral: true });
+      await selectCtx.send({ content, ephemeral: true });
 
       await selectCtx.editParent({
         content: `Vote mockup (${ballot.size} / ${game.players.length})`
