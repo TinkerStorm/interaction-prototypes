@@ -21,7 +21,7 @@ Deception is a bot made as a prototype to manage game lobbies for community serv
 - [Apr 2nd 2022 - Vote mockup](https://twitter.com/TinkerStorm/status/1510042509321379842)
 - [May 7th 2022 - Full automation](https://twitter.com/TinkerStorm/status/1523051267454824448) - #2
   - [May 10th 2022 - Ephemeral setup wizard](https://twitter.com/TinkerStorm/status/1523806105117376512) - #10
-- [Jun 18th 2022 - Vote coundown](https://twitter.com/TinkerStorm/status/1538190111959044104) - #27 
+- [Jun 18th 2022 - Vote countdown](https://twitter.com/TinkerStorm/status/1538190111959044104) - #27
 
 ## License
 
