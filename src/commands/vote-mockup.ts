@@ -43,6 +43,14 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
 
     await ctx.fetch();
 
+    game.log.push({
+      type: 'vote:begin',
+      context: {
+        id: ctx.messageID,
+        requestedBy: ctx.user.id
+      }
+    });
+
     const ballot = new Map<string, string>();
 
     ctx.registerComponent('vote', async (selectCtx) => {
