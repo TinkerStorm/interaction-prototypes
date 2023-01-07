@@ -89,6 +89,17 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
       }
 
       ballot.set(selectCtx.user.id, newVote);
+
+      game.log.push({
+        type: `vote:${oldVote ? 'change' : 'add'}`,
+        context: {
+          id: ctx.messageID,
+          user: ctx.user.id,
+          newVote,
+          ...(oldVote && { oldVote: oldVote })
+        }
+      });
+
       await selectCtx.send(`You have voted for <@${newVote}>.`, { ephemeral: true });
 
       await selectCtx.editParent({
