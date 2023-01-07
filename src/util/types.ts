@@ -40,6 +40,15 @@ export interface LobbyOptions {
   gamePromptID: string; // new game message
 }
 
+export interface ListTailOptions<T> {
+  /** A string to use when connecting items together. */
+  connector?: string;
+  /** A string to use for between the 2nd-to-last and last items */
+  tail?: string;
+  /** A transform method to use on the generic of T returning a string which is used  */
+  injector?: (value: T) => string;
+}
+
 export interface IGame {
   title: string;
   id: string;

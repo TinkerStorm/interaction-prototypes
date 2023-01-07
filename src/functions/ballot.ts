@@ -28,7 +28,7 @@ export function determineResult(votes: Ballot): BallotResult {
     .filter(([, count], _, array) => count >= array[0][1])
     .map(([id]) => id);
 
-  let result = null;
+  let result: BallotOutcome = null;
   if (topSorted.length === 1) result = topSorted[0];
   else if (topSorted.length > 1) result = topSorted;
 

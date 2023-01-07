@@ -1,6 +1,6 @@
 import { Client as ErisClient } from 'eris';
 import { Permissions, SlashCreator } from 'slash-create';
-import { AccessCheckOptions, User } from './types';
+import { AccessCheckOptions, ListTailOptions, User } from './types';
 
 export const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -46,3 +46,20 @@ export const checkPermissions = (options: AccessCheckOptions) => {
  * @author sudojunior
  */
 export const undi = ({ username, discriminator, id }: User) => `${username}#${discriminator} (${id})`;
+
+/**
+ * @param list The list of items to join.
+ * @param options The options for handling the outcome.
+ */
+export function joinListTail<T>(list: T[], options: ListTailOptions<T>): string {
+  if (list.length <= 0) return '';
+
+  const { injector = identity, connector = ' and ', tail = ', ' } = options;
+
+  const rest = list.map(injector);
+  const last = rest.pop();
+
+  return rest.length > 0 ? rest.join(connector) + tail + last : String(last);
+}
+
+export const identity = <T>(value: T): T => value;

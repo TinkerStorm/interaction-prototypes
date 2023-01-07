@@ -1,6 +1,6 @@
 import { Client } from 'eris';
-import { CommandContext, ComponentType, SlashCommand, SlashCreator } from 'slash-create';
-import { wait } from '../util/common';
+import { CommandContext, ComponentSelectOption, ComponentType, SlashCommand, SlashCreator } from 'slash-create';
+import { joinListTail, wait } from '../util/common';
 import { determineResult } from '../functions/ballot';
 import { games } from '../util/game';
 
@@ -43,15 +43,14 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
           components: [
             {
               type: ComponentType.SELECT,
+              min_values: 0,
               max_values: 1,
               custom_id: 'vote',
               placeholder: 'Select a player to put on trial',
-              options: game.players.map((player) => {
-                return {
-                  label: player.nick || player.user.username,
-                  value: player.id
-                };
-              })
+              options: game.players.map<ComponentSelectOption>((player) => ({
+                label: player.nick || player.user.username,
+                value: player.id
+              }))
             }
           ]
         }
@@ -63,31 +62,59 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
     ctx.registerComponent('vote', async (selectCtx) => {
       console.log(`Received vote with ${start + duration - Date.now()}ms remaining`);
 
-      if (game.players.findIndex((p) => p.id === selectCtx.user.id) === -1)
-        return selectCtx.send('You are not in this game.', { ephemeral: true });
+      const { user, values } = selectCtx;
 
-      if (start + duration < Date.now()) {
-        return selectCtx.send('The vote has ended.', { ephemeral: true });
+      if (game.players.findIndex((p) => p.id === user.id) === -1) {
+        await selectCtx.send('You are not in this game.', { ephemeral: true });
+        return;
       }
 
-      const currentVote = ballot.get(selectCtx.user.id);
-      const newVote = selectCtx.values[0];
+      const oldVote = ballot.get(user.id);
+      const [newVote] = values;
 
-      if (currentVote === newVote) {
-        return selectCtx.send('Unchanged.', { ephemeral: true });
+      if (!newVote) {
+        if (oldVote) {
+          ballot.delete(selectCtx.user.id);
+          game.log.push({
+            type: 'vote:withdraw',
+            context: {
+              id: ctx.messageID,
+              timestamp: Date.now(),
+              user: user.id,
+              oldVote
+            }
+          });
+        }
+
+        const content = !oldVote ? 'Abstained from voting.' : 'You have not voted yet.';
+        await selectCtx.send({ content, ephemeral: true });
+
+        return;
       }
+
+      if (oldVote === newVote) {
+        await selectCtx.send('Unchanged.', { ephemeral: true });
+        return;
+      }
+
+      const content = oldVote
+        ? `You have changed your vote from <@${oldVote}> to <@${newVote}>.`
+        : `You have voted for <@${newVote}>`;
 
       ballot.set(selectCtx.user.id, newVote);
-      await selectCtx.send(`You have voted for <@${newVote}>.`, { ephemeral: true });
 
       game.log.push({
-        type: 'vote-success',
+        type: `vote:${oldVote ? 'change' : 'add'}`,
         context: {
-          origin: selectCtx.user.id,
-          oldVote: currentVote,
-          newVote
+          id: ctx.messageID,
+          timestamp: Date.now(),
+          user: ctx.user.id,
+          newVote,
+          ...(oldVote && { oldVote: oldVote })
         }
       });
+
+      await selectCtx.send({ content, ephemeral: true });
 
       await selectCtx.editParent({
         embeds: [getBallotEmbed()]
@@ -107,43 +134,49 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
     if (voteResult === null) {
       content = 'The vote was inconclusive.';
     } else if (Array.isArray(voteResult)) {
-      const [lastPlayer, ...players] = voteResult.map((id) => `<@${id}>`).reverse();
-      content = `It was a split vote between ${
-        players.length > 0 ? `${players.join(', ')} and ${lastPlayer}` : lastPlayer
-      }.`;
+      const outcome = joinListTail(voteResult, {
+        connector: ', ',
+        tail: ' and ',
+        injector: (user) => `<@${user}>`
+      });
+
+      content = `It was a split vote between ${outcome}.`;
     } else {
       content = `It was a unanimous vote for <@${voteResult}>.`;
     }
 
     await ctx.editOriginal({
       content,
-      embeds:
-        voteCounts.size === 0
-          ? []
-          : [
+      components: [],
+      ...(voteCounts.size === 0 && {
+        embeds: [
+          {
+            color: game.color,
+            title: 'Vote Totals',
+            fields: [
               {
-                color: game.color,
-                title: 'Vote Totals',
-                fields: [
-                  {
-                    name: 'Player',
-                    value: [...voteCounts.keys()].map((id) => `<@${id}>`).join('\n'),
-                    inline: true
-                  },
-                  {
-                    name: 'Votes',
-                    value: [...voteCounts.values()].join('\n'),
-                    inline: true
-                  }
-                ]
+                name: 'Player',
+                value: [...voteCounts.keys()].map((id) => `<@${id}>`).join('\n'),
+                inline: true
+              },
+              {
+                name: 'Votes',
+                value: [...voteCounts.values()].join('\n'),
+                inline: true
               }
-            ],
-      components: []
+            ]
+          }
+        ]
+      })
     });
 
     game.log.push({
-      type: 'vote-result',
-      context: Object.fromEntries(ballot)
+      type: 'vote:result',
+      context: {
+        id: ctx.messageID,
+        timestamp: Date.now(),
+        ballot: Object.fromEntries(ballot)
+      }
     });
   }
 }
