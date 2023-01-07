@@ -47,6 +47,7 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
       type: 'vote:begin',
       context: {
         id: ctx.messageID,
+        timestamp: Date.now(),
         requestedBy: ctx.user.id
       }
     });
@@ -71,6 +72,7 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
             type: 'vote:withdraw',
             context: {
               id: ctx.messageID,
+              timestamp: Date.now(),
               user: user.id,
               oldVote
             }
@@ -98,6 +100,7 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
         type: `vote:${oldVote ? 'change' : 'add'}`,
         context: {
           id: ctx.messageID,
+          timestamp: Date.now(),
           user: ctx.user.id,
           newVote,
           ...(oldVote && { oldVote: oldVote })
@@ -163,6 +166,7 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
       type: 'vote:result',
       context: {
         id: ctx.messageID,
+        timestamp: Date.now(),
         ballot: Object.fromEntries(ballot)
       }
     });
