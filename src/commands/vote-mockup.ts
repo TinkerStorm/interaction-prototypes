@@ -97,10 +97,13 @@ export default class VoteMockupCommand extends SlashCommand<Client> {
     if (voteResult === null) {
       content = 'The vote was inconclusive.';
     } else if (Array.isArray(voteResult)) {
-      const [lastPlayer, ...players] = voteResult.map((id) => `<@${id}>`).reverse();
-      content = `It was a split vote between ${
-        players.length > 0 ? `${players.join(', ')} and ${lastPlayer}` : lastPlayer
-      }.`;
+      const outcome = joinListTail(voteResult, {
+        connector: ', ',
+        tail: ' and ',
+        injector: (user) => `<@${user}>`
+      });
+
+      content = `It was a split vote between ${outcome}.`;
     } else {
       content = `It was a unanimous vote for <@${voteResult}>.`;
     }
